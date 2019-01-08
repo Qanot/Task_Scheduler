@@ -63,7 +63,7 @@ def split_early_late(problem, d):
     for i in range(len(problem)):
         current += problem[i, 0]
         if (current >= d):
-            return problem[0:i + 1], problem[i + 1:]
+            return problem[0:i], problem[i:]
 
 
 def split_early_late_better(problem):
@@ -107,9 +107,10 @@ def heuristic(problem, d, time_left):
     temp_problem = problem.copy()
     temp_cost = cost_function(temp_problem, d)
     counter = 0
-    while time_left > 1200: #empiricly tested for appropriate value in miliseconds; there may be need of adjustment
+    while time_left > 200: #empiricly tested for appropriate value in miliseconds; there may be need of adjustment
         tic = time.clock()
-        swap_indices = np.random.random_integers(0, len(temp_problem) - 1, int(len(temp_problem)*0.1) + 1)
+
+        swap_indices = np.random.random_integers(0, len(temp_problem) - 1, int(len(temp_problem) * 0.1) + 1)
         # swap_indices = np.random.random_integers(0, len(temp_problem) - 1, 2)
         for task_index in swap_indices[1:]:
             temp_problem[[swap_indices[0], task_index]] = temp_problem[[task_index, swap_indices[0]]]
@@ -119,15 +120,17 @@ def heuristic(problem, d, time_left):
             else:
                 temp_problem[[task_index, swap_indices[0]]] = temp_problem[[swap_indices[0], task_index]]
                 # temp_problem[swap_indices[::-1]] = temp_problem[swap_indices]
-        counter += 1
-        print(counter)
+        # counter += 1
+        # print(counter)
+
+
         toc = time.clock()
         time_left -= (toc - tic) * 1000
     return temp_problem
 
 
-def proces(n, k, h):
-    time_left = n * 200
+def proces(n, k, h, c):
+    time_left = n * c
 
     time_start_processing = time.clock()
 
@@ -162,6 +165,7 @@ def main():
     n = int(sys.argv[1])
     k = int(sys.argv[2])
     h = float(sys.argv[3])
+    c = int(sys.argv[4])
     proces(n, k, h)
 
 
